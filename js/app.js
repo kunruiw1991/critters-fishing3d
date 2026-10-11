@@ -2767,20 +2767,13 @@
     camera.lookAt(baseCamLook);
 
     if (state.trauma > 0) {
-      state.trauma = Math.max(0, state.trauma - 1.4 * dt);
+      state.trauma = Math.max(0, state.trauma - 2.4 * dt);
       const shake = state.trauma * state.trauma;
       const ph = state.shakePhase;
-      const w1 = elapsedSec * 17.0 * Math.PI * 2;
-      const w2 = elapsedSec * 23.0 * Math.PI * 2;
-      const w3 = elapsedSec * 31.0 * Math.PI * 2;
-
-      const noiseYaw = (Math.sin(w1 + ph) * 0.5 + Math.sin(w2 + ph * 1.7) * 0.35 + Math.cos(w3 + ph * 2.3) * 0.15);
-      const noisePitch = (Math.cos(w1 + ph * 1.3) * 0.5 + Math.sin(w3 + ph * 0.7) * 0.35 + Math.cos(w2 + ph * 2.1) * 0.15);
-      const noiseRoll = (Math.sin(w2 + ph * 0.9) * 0.55 + Math.cos(w3 + ph * 1.5) * 0.45);
-
-      camera.rotation.y += noiseYaw * 0.025 * shake;
-      camera.rotation.x += noisePitch * 0.025 * shake;
-      camera.rotation.z += noiseRoll * 0.04 * shake;
+      const w1 = elapsedSec * 12.0;
+      const w2 = elapsedSec * 16.0;
+      camera.position.x += Math.sin(w1 + ph) * 0.08 * shake;
+      camera.position.y += Math.cos(w2 + ph * 1.3) * 0.06 * shake;
     }
 
     orientBillboards();
