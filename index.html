@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Critter Fishing Derby 3D: Rainbow Lagoon!</title>
+  <link rel="icon" href="icons/catnap.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="game-root" aria-label="Critter Fishing Derby 3D: Rainbow Lagoon">
+    <canvas id="webgl-canvas"></canvas>
+    <div id="fx-layer" aria-hidden="true"></div>
+
+    <!-- Top Visual HUD -->
+    <header id="top-hud">
+      <div class="hud-left">
+        <button id="btn-home" class="icon-btn" aria-label="Stage Select" title="Stage Select">
+          <span class="emoji-icon">🏝️</span>
+        </button>
+        <div id="stage-badge" class="pill-badge" title="Current Lagoon">
+          <img id="hud-critter-avatar" src="icons/catnap.jpg" alt="" />
+          <span id="hud-stage-icon" class="emoji-icon">🌈</span>
+          <div id="stage-dots" class="stage-dots"></div>
+        </div>
+      </div>
+
+      <!-- 5-Critter Live Catch Podium Bar -->
+      <div id="race-leaderboard" aria-label="5-Critter Catch Standings"></div>
+
+      <div class="hud-right">
+        <div id="timer-badge" class="pill-badge timer-pill" title="Derby Timer">
+          <span class="emoji-icon">⏱️</span>
+          <div class="bar-track"><div id="timer-fill" class="bar-fill"></div></div>
+          <span id="timer-num" class="hud-num">60</span>
+        </div>
+        <button id="btn-audio" class="icon-btn" aria-label="Toggle Sound" title="Toggle Sound">
+          <span id="audio-icon" class="emoji-icon">🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Left Lagoon Stage Rail (8 Lagoons) -->
+    <nav id="stage-rail" aria-label="Lagoon Stages"></nav>
+
+    <!-- Bottom Zero-Text Visual Cockpit -->
+    <footer id="bottom-cockpit">
+      <!-- D-Pad / Aim & Cast Controls -->
+      <div class="cockpit-left">
+        <button id="btn-aim-left" class="ctrl-btn aim-btn" aria-label="Aim Left">
+          <span class="emoji-icon">⬅️</span>
+        </button>
+        <button id="btn-cast-reel" class="ctrl-btn cast-btn" aria-label="Cast or Reel Hook">
+          <span id="cast-icon" class="emoji-icon">🎣</span>
+          <span class="CastPulse"></span>
+        </button>
+        <button id="btn-aim-right" class="ctrl-btn aim-btn" aria-label="Aim Right">
+          <span class="emoji-icon">➡️</span>
+        </button>
+      </div>
+
+      <!-- Center Catch Progress & Rainbow Fever Gauge -->
+      <div class="cockpit-center">
+        <div class="gauge-row" title="Catch Quota Progress">
+          <span class="emoji-icon">🐟</span>
+          <div class="gauge-track">
+            <div id="score-fill" class="gauge-fill score-gradient"></div>
+            <div class="gauge-markers">
+              <span class="marker m-bronze">🥉</span>
+              <span class="marker m-silver">🥈</span>
+              <span class="marker m-gold">🥇</span>
+            </div>
+          </div>
+          <span id="player-score-num" class="hud-num">0</span>
+        </div>
+        <div class="gauge-row fever-row" title="Rainbow Fever">
+          <span class="emoji-icon">🌈</span>
+          <div class="gauge-track fever-track">
+            <div id="fever-fill" class="gauge-fill fever-gradient"></div>
+          </div>
+          <span id="combo-badge" class="combo-pill">x1</span>
+        </div>
+      </div>
+
+      <!-- 3 Power Pedals -->
+      <div class="cockpit-pedals">
+        <button id="pedal-1" class="pedal-btn pedal-whirlpool" data-pedal="0" aria-label="Whirlpool Magnet Lure">
+          <span class="pedal-icon">🌪️</span>
+          <span class="pedal-key">1</span>
+          <div class="pedal-cd-overlay"></div>
+        </button>
+        <button id="pedal-2" class="pedal-btn pedal-net" data-pedal="1" aria-label="Golden Super Net">
+          <span class="pedal-icon">⚡</span>
+          <span class="pedal-key">2</span>
+          <div class="pedal-cd-overlay"></div>
+        </button>
+        <button id="pedal-3" class="pedal-btn pedal-shock" data-pedal="2" aria-label="Depth Shockwave">
+          <span class="pedal-icon">💥</span>
+          <span class="pedal-key">3</span>
+          <div class="pedal-cd-overlay"></div>
+        </button>
+      </div>
+    </footer>
+
+    <!-- Start / Critter & Lagoon Selector Modal -->
+    <section id="overlay-menu" class="modal-overlay active" aria-label="Select Critter and Lagoon">
+      <div class="modal-card">
+        <div class="modal-banner">
+          <span class="banner-emoji">🎣</span>
+          <span class="banner-emoji">🌈</span>
+          <span class="banner-emoji">🐋</span>
+          <span class="banner-emoji">🏆</span>
+        </div>
+        <div id="critter-picker" class="picker-grid critter-grid" aria-label="Choose Your Critter"></div>
+        <div id="stage-picker" class="picker-grid stage-grid" aria-label="Choose Lagoon Stage"></div>
+        <div class="modal-actions">
+          <button id="btn-play" class="big-action-btn play-pulse" aria-label="Start Fishing Derby">
+            <span class="emoji-icon">⛵</span>
+            <span class="emoji-icon">🎣</span>
+            <span class="emoji-icon">▶️</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- End-of-Round 5-Critter Podium Modal -->
+    <section id="overlay-podium" class="modal-overlay" aria-label="Derby Results Podium">
+      <div class="modal-card podium-card">
+        <div id="podium-status-banner" class="podium-banner">
+          <span id="podium-rank-medal" class="big-medal">🥇</span>
+          <div id="podium-stars" class="podium-stars">⭐⭐⭐</div>
+        </div>
+        <div id="podium-standings" class="podium-standings"></div>
+        <div class="modal-actions">
+          <button id="btn-retry" class="big-action-btn retry-btn" aria-label="Retry Lagoon">
+            <span class="emoji-icon">🔄</span>
+          </button>
+          <button id="btn-next-stage" class="big-action-btn next-btn" aria-label="Next Lagoon">
+            <span class="emoji-icon">🏝️</span>
+            <span class="emoji-icon">▶️</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/vendor/three.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
